@@ -50,8 +50,19 @@ def compile_bold_stars(line):
     >>> compile_bold_stars('***')
     '***'
     '''
-    return line
-
+    accumulator = ''
+    just_editted = False
+    for i, x in enumerate(line):
+        if x == '*' and line[i+1] == '*':
+            if not just_editted:
+                accumulator += '<b>'
+                just_editted = True
+            else:
+                accumulator += '</b>'
+                just_editted = False
+        elif x != '*':
+            accumulator += x
+    return accumulator
 
 def compile_links(line):
     '''

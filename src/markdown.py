@@ -3,6 +3,7 @@ All the functions in this file convert markdown syntax into html.
 Implementing these functions will give you practice learning the correct markdown syntax.
 '''
 
+
 def compile_italic_underscore(line):
     '''
     Convert "_italic_" into "<i>italic</i>".
@@ -26,28 +27,6 @@ def compile_italic_underscore(line):
     >>> compile_italic_underscore('')
     ''
     '''
-    '''
-    pairs_count = line.count("_") // 2
-    if pairs_count == 0:
-        return line
-
-    res = ""
-    is_opening = True
-
-    for char in line:
-        if char == "_" and pairs_count > 0:
-            if is_opening:
-                res += "<i>"
-                is_opening = False
-            else:
-                res += "</i>"
-                is_opening = True
-                pairs_count -= 1
-        else:
-            res += char
-
-    return res
-    '''
     if not line:
         return line
     pair = line.count("_") // 2
@@ -66,16 +45,7 @@ def compile_italic_underscore(line):
         else:
             accumulator += char
     return accumulator
-   # just_edited = False
-    #for i in range(len(line)-1):
-     #   if i == '-' and just_edited == False:
-      #      just_edited = True
-       #     index1 = i
-        #elif i == '_':
-         #   line[i] = '</i>'
-          #  line[index1]+= '<i>'
-           # just_edited = False
-   # return line
+
 
 def compile_bold_stars(line):
     '''
@@ -103,7 +73,7 @@ def compile_bold_stars(line):
     accumulator = ''
     just_editted = False
     for i, x in enumerate(line):
-        if i <= len(line) -2: 
+        if i <= len(line) -2:
             if x == '*' and line[i+1] == '*':
                 if not just_editted:
                     if line[i+1:].find('**') != -1:
@@ -122,6 +92,7 @@ def compile_bold_stars(line):
             if x != '*':
                 accumulator += x
     return accumulator
+
 
 def compile_links(line):
     '''
@@ -168,15 +139,3 @@ def compile_links(line):
             accumulator += line[i]
             i+=1
     return accumulator
-
-
-
-
-
-
-
-
-
-
-
-

@@ -26,8 +26,56 @@ def compile_italic_underscore(line):
     >>> compile_italic_underscore('')
     ''
     '''
-    return line
+    '''
+    pairs_count = line.count("_") // 2
+    if pairs_count == 0:
+        return line
 
+    res = ""
+    is_opening = True
+
+    for char in line:
+        if char == "_" and pairs_count > 0:
+            if is_opening:
+                res += "<i>"
+                is_opening = False
+            else:
+                res += "</i>"
+                is_opening = True
+                pairs_count -= 1
+        else:
+            res += char
+
+    return res
+    '''
+    if not line:
+        return line
+    pair = line.count("_") // 2
+    accumulator = ""
+    just_editted = True
+
+    for char in line:
+        if char == "_" and pair > 0:
+            if just_editted:
+                accumulator += "<i>"
+                just_editted = False
+            else:
+                accumulator += "</i>"
+                just_editted = True
+                pair -= 1
+        else:
+            accumulator += char
+    return accumulator
+   # just_edited = False
+    #for i in range(len(line)-1):
+     #   if i == '-' and just_edited == False:
+      #      just_edited = True
+       #     index1 = i
+        #elif i == '_':
+         #   line[i] = '</i>'
+          #  line[index1]+= '<i>'
+           # just_edited = False
+   # return line
 
 def compile_bold_stars(line):
     '''
@@ -50,18 +98,29 @@ def compile_bold_stars(line):
     >>> compile_bold_stars('***')
     '***'
     '''
+    if line == '***':
+        return '***'
     accumulator = ''
     just_editted = False
     for i, x in enumerate(line):
-        if x == '*' and line[i+1] == '*':
-            if not just_editted:
-                accumulator += '<b>'
-                just_editted = True
-            else:
-                accumulator += '</b>'
-                just_editted = False
-        elif x != '*':
-            accumulator += x
+        if i <= len(line) -2: 
+            if x == '*' and line[i+1] == '*':
+                if not just_editted:
+                    if line[i+1:].find('**') != -1:
+                        accumulator += '<b>'
+                        just_editted = True
+                    else:
+                        accumulator += '**'
+                else:
+                    accumulator += '</b>'
+                    just_editted = False
+            elif x != '*':
+                accumulator += x
+            elif x == '*' and line[i+1] != '*' and line[i-1] != '*':
+                accumulator += '*'
+        else:
+            if x != '*':
+                accumulator += x
     return accumulator
 
 def compile_links(line):
@@ -87,4 +146,37 @@ def compile_links(line):
     >>> compile_links('nothing here](oops)')
     'nothing here](oops)'
     '''
-    return line
+    accumulator = ''
+    i = 0
+    while i < len(line):
+        if line[i] == '[':
+            cbrack = line.find(']', i)
+            if cbrack != -1 and cbrack + 1 < len(line) and line[cbrack + 1] == '(':
+                cparen = line.find(')', cbrack + 2)
+                if cparen  != -1:
+                    text = line[i + 1:cbrack]
+                    url = line[cbrack +2:cparen]
+                    accumulator += '<a href="' + url + '">' + text + '</a>'
+                    i = cparen + 1
+                else:
+                    accumulator += line[i]
+                    i += 1
+            else:
+                accumulator += line[i]
+                i+= 1
+        else:
+            accumulator += line[i]
+            i+=1
+    return accumulator
+
+
+
+
+
+
+
+
+
+
+
+
